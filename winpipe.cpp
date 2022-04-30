@@ -15,6 +15,20 @@ static int l_hell(lua_State *L) {
    return 1;
 }
 
+static void add_constant(lua_State *L, const char* name, int value) {
+    lua_pushstring(L, name);
+    lua_pushnumber(L, value);
+    lua_settable(L, -3);
+}
+
+static int lib_constants(lua_State *L) {
+    lua_newtable(L);
+    add_constant(L, "PIPE_ACCESS_INBOUND", PIPE_ACCESS_INBOUND);
+    add_constant(L, "PIPE_ACCESS_OUTBOUND", PIPE_ACCESS_OUTBOUND);
+    add_constant(L, "PIPE_ACCESS_DUPLEX", PIPE_ACCESS_DUPLEX);
+    return 1;
+}
+
 static int lib_CreateNamedPipe(lua_State *L) {
    // TODO: add __gc to handle metatable
    HANDLE* pHandle = (HANDLE*) lua_newuserdata(L, sizeof(HANDLE));
@@ -57,6 +71,7 @@ static const struct luaL_Reg library_functions[] = {
     {"somefunc", l_hell},
     {"CreateNamedPipe", lib_CreateNamedPipe},
     {"CloseHandle", lib_CloseHandle},
+    {"constants", lib_constants},
     {NULL, NULL}
 };
 
