@@ -1,0 +1,6 @@
+.*
+!/.gitignore
+!/.vscode
+*.iml
+/config/
+*.dll
