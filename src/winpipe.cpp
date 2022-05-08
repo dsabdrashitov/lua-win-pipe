@@ -6,8 +6,8 @@
  
 // Lua headers
 extern "C" {
-#include "include\lauxlib.h"
-#include "include\lua.h"
+#include <lauxlib.h>
+#include <lua.h>
 }
 
 static int l_hell(lua_State *L) {
