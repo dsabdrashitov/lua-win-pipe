@@ -13,4 +13,8 @@ package.path = prev_path
 
 lua_win_pipe.dll = winpipe
 
+for name, val in pairs(winpipe.winpipe_constants()) do
+    lua_win_pipe[name] = val
+end
+
 return lua_win_pipe

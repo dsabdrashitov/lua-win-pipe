@@ -13,4 +13,8 @@ for name, val in pairs(lua_win_pipe.dll.winpipe_constants()) do
     print(name .. ": " .. val)
 end
 
-print(lua_win_pipe.dll.winpipe_mask(1, 2, 4, 65536.0, 2147483648, 2147483648 * 1024))
+print(lua_win_pipe.dll.winpipe_mask(
+        lua_win_pipe.FILE_FLAG_FIRST_PIPE_INSTANCE,
+        lua_win_pipe.FILE_FLAG_WRITE_THROUGH,
+        lua_win_pipe.FILE_FLAG_OVERLAPPED
+))
