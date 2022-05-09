@@ -17,4 +17,6 @@ for name, val in pairs(winpipe.winpipe_constants()) do
     lua_win_pipe[name] = val
 end
 
+lua_win_pipe.mask = winpipe.winpipe_mask
+
 return lua_win_pipe
