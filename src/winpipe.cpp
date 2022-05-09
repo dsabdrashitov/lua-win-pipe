@@ -10,11 +10,6 @@ extern "C" {
 #include <lua.h>
 }
 
-static int l_hell(lua_State *L) {
-   lua_pushstring(L, "hello");
-   return 1;
-}
-
 static void add_constant(lua_State *L, const char* name, int value) {
     lua_pushstring(L, name);
     lua_pushnumber(L, value);
@@ -23,9 +18,29 @@ static void add_constant(lua_State *L, const char* name, int value) {
 
 static int lib_constants(lua_State *L) {
     lua_newtable(L);
+    //add_constant(L, "", );
+    // CreateNamedPipe:dwOpenMode, same for all
     add_constant(L, "PIPE_ACCESS_INBOUND", PIPE_ACCESS_INBOUND);
     add_constant(L, "PIPE_ACCESS_OUTBOUND", PIPE_ACCESS_OUTBOUND);
     add_constant(L, "PIPE_ACCESS_DUPLEX", PIPE_ACCESS_DUPLEX);
+    // CreateNamedPipe:dwOpenMode, can differ
+    add_constant(L, "FILE_FLAG_FIRST_PIPE_INSTANCE", FILE_FLAG_FIRST_PIPE_INSTANCE);
+    add_constant(L, "FILE_FLAG_WRITE_THROUGH", FILE_FLAG_WRITE_THROUGH);
+    add_constant(L, "FILE_FLAG_OVERLAPPED", FILE_FLAG_OVERLAPPED);
+    add_constant(L, "WRITE_DAC", WRITE_DAC);
+    add_constant(L, "WRITE_OWNER", WRITE_OWNER);
+    add_constant(L, "ACCESS_SYSTEM_SECURITY", ACCESS_SYSTEM_SECURITY);
+    // CreateNamedPipe:dwPipeMode, same for all
+    add_constant(L, "PIPE_TYPE_BYTE", PIPE_TYPE_BYTE);
+    add_constant(L, "PIPE_TYPE_MESSAGE", PIPE_TYPE_MESSAGE);
+    // CreateNamedPipe:dwPipeMode, can differ
+    add_constant(L, "PIPE_READMODE_BYTE", PIPE_READMODE_BYTE);
+    add_constant(L, "PIPE_READMODE_MESSAGE", PIPE_READMODE_MESSAGE);
+    add_constant(L, "PIPE_WAIT", PIPE_WAIT);
+    add_constant(L, "PIPE_NOWAIT", PIPE_NOWAIT);
+    add_constant(L, "PIPE_ACCEPT_REMOTE_CLIENTS", PIPE_ACCEPT_REMOTE_CLIENTS);
+    add_constant(L, "PIPE_REJECT_REMOTE_CLIENTS", PIPE_REJECT_REMOTE_CLIENTS);
+    
     return 1;
 }
 
@@ -68,10 +83,9 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {
 }
 
 static const struct luaL_Reg library_functions[] = {
-    {"somefunc", l_hell},
-    {"CreateNamedPipe", lib_CreateNamedPipe},
-    {"CloseHandle", lib_CloseHandle},
-    {"constants", lib_constants},
+    {"winpipe_CreateNamedPipe", lib_CreateNamedPipe},
+    {"winpipe_CloseHandle", lib_CloseHandle},
+    {"winpipe_constants", lib_constants},
     {NULL, NULL}
 };
 

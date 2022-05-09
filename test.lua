@@ -9,7 +9,6 @@ lua_win_pipe = require("build.lua-win-pipe.lua-win-pipe")
 -- Restore path
 package.path = prev_path
 
-print(lua_win_pipe.dll.somefunc())
-for name, val in pairs(lua_win_pipe.dll.constants()) do
+for name, val in pairs(lua_win_pipe.dll.winpipe_constants()) do
     print(name .. ": " .. val)
 end
