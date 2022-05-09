@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <stdio.h>
  
 // Lua marks for building as DLL
 #define LUA_LIB
@@ -10,7 +11,7 @@ extern "C" {
 #include <lua.h>
 }
 
-static void add_constant(lua_State *L, const char* name, int value) {
+static void add_constant(lua_State *L, const char* name, unsigned long value) {
     lua_pushstring(L, name);
     lua_pushnumber(L, value);
     lua_settable(L, -3);
@@ -44,6 +45,18 @@ static int lib_constants(lua_State *L) {
     return 1;
 }
 
+static int lib_mask(lua_State *L) {
+    int top = lua_gettop(L);
+    long long result = 0;
+    for (int i = 1; i <= top; i++) {
+        long long arg = luaL_checkinteger(L, i);
+        result |= arg;
+        printf("%lld\n", arg);
+    }
+    lua_pushnumber(L, result);
+    return 1;
+}
+
 static int lib_CreateNamedPipe(lua_State *L) {
    // TODO: add __gc to handle metatable
    HANDLE* pHandle = (HANDLE*) lua_newuserdata(L, sizeof(HANDLE));
@@ -67,6 +80,7 @@ static int lib_CreateNamedPipe(lua_State *L) {
          nTimeoutMs,
          NULL);
    
+   //TODO: push result to stack
    return 1;
 }
 
@@ -86,6 +100,7 @@ static const struct luaL_Reg library_functions[] = {
     {"winpipe_CreateNamedPipe", lib_CreateNamedPipe},
     {"winpipe_CloseHandle", lib_CloseHandle},
     {"winpipe_constants", lib_constants},
+    {"winpipe_mask", lib_mask},
     {NULL, NULL}
 };
 
