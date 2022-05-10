@@ -30,6 +30,8 @@ local handle = lua_win_pipe.CreateNamedPipe(
 )
 
 print(handle == lua_win_pipe.INVALID_HANDLE_VALUE)
-print(lua_win_pipe.INVALID_HANDLE_VALUE == handle)
+print(lua_win_pipe.INVALID_HANDLE_VALUE ~= handle)
+
+print(lua_win_pipe.ConnectNamedPipe(handle, nil))
 
 print(lua_win_pipe.CloseHandle(handle))

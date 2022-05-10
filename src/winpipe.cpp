@@ -2,7 +2,7 @@
 
 const char* METATABLE_HANDLE = "winpipe.HANDLE";
 
-static int lib_constants(lua_State *L) {
+static int lib_constants(lua_State* L) {
     lua_newtable(L);
     
     // CreateNamedPipe:dwOpenMode, same for all
@@ -34,7 +34,7 @@ static int lib_constants(lua_State *L) {
     return 1;
 }
 
-static int lib_mask(lua_State *L) {
+static int lib_mask(lua_State* L) {
     int top = lua_gettop(L);
     long long result = 0;
     for (int i = 1; i <= top; i++) {
@@ -45,12 +45,7 @@ static int lib_mask(lua_State *L) {
     return 1;
 }
 
-static int lib_CreateNamedPipe(lua_State *L) {
-   // TODO: add __gc to handle metatable
-   HANDLE* pHandle = (HANDLE*) lua_newuserdata(L, sizeof(HANDLE));
-   luaL_getmetatable(L, METATABLE_HANDLE);
-   lua_setmetatable(L, -2);
-   
+static int lib_CreateNamedPipe(lua_State* L) {   
    const char* pName = luaL_checkstring(L, 1);
    DWORD dwOpenMode = luaL_checkinteger(L, 2);
    DWORD dwPipeMode = luaL_checkinteger(L, 3);
@@ -59,6 +54,10 @@ static int lib_CreateNamedPipe(lua_State *L) {
    DWORD nInBufferSize = luaL_checkinteger(L, 6);
    DWORD nTimeoutMs = luaL_checkinteger(L, 7);
    luaL_argcheck(L, lua_isnil(L, 8), 8, "nil expected");
+
+   HANDLE* pHandle = (HANDLE*) lua_newuserdata(L, sizeof(HANDLE));
+   luaL_getmetatable(L, METATABLE_HANDLE);
+   lua_setmetatable(L, -2);
 
    *pHandle = CreateNamedPipe(
          pName,
@@ -73,20 +72,30 @@ static int lib_CreateNamedPipe(lua_State *L) {
    return 1;
 }
 
-static int lib_CloseHandle(lua_State *L) {
+static int lib_ConnectNamedPipe(lua_State* L) {
     HANDLE handle = getHandle(L, 1);
+    luaL_argcheck(L, lua_isnil(L, 2), 2, "nil expected");
+
+    BOOL result = ConnectNamedPipe(handle, NULL);
+    lua_pushboolean(L, result);
+    return 1;
+}
+
+static int lib_CloseHandle(lua_State* L) {
+    HANDLE handle = getHandle(L, 1);
+
     WINBOOL result = CloseHandle(handle);
     lua_pushboolean(L, result);
     return 1;
 }
 
-static HANDLE getHandle(lua_State *L, int index) {
+static HANDLE getHandle(lua_State* L, int index) {
     HANDLE* pHandle = (HANDLE*) luaL_checkudata(L, index, METATABLE_HANDLE);
     luaL_argcheck(L, pHandle != NULL, index, "HANDLE* expected");
     return *pHandle;
 }
 
-static void addLongConstant(lua_State *L, const char* name, unsigned long value) {
+static void addLongConstant(lua_State* L, const char* name, unsigned long value) {
     lua_pushstring(L, name);
     lua_pushnumber(L, value);
     lua_settable(L, -3);
@@ -102,7 +111,7 @@ static void addPointerConstant(lua_State* L, const char* name, void* value, cons
     lua_settable(L, -3);
 }
 
-static int pointerEquals(lua_State *L) {
+static int pointerEquals(lua_State* L) {
     void** p1 = (void**) lua_touserdata(L, 1);
     void** p2 = (void**) lua_touserdata(L, 2);
     bool result = (*p1 == *p2);
@@ -117,13 +126,14 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {
 
 static const struct luaL_Reg library_functions[] = {
     {"winpipe_CreateNamedPipe", lib_CreateNamedPipe},
+    {"winpipe_ConnectNamedPipe", lib_ConnectNamedPipe},
     {"winpipe_CloseHandle", lib_CloseHandle},
     {"winpipe_constants", lib_constants},
     {"winpipe_mask", lib_mask},
     {NULL, NULL}
 };
 
-extern "C" LUALIB_API int luaopen_winpipe(lua_State *L) {
+extern "C" LUALIB_API int luaopen_winpipe(lua_State* L) {
     luaL_newmetatable(L, METATABLE_HANDLE);
 
     // set __eq to HANDLE
