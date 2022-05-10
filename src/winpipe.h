@@ -15,5 +15,6 @@ extern "C" {
 
 static HANDLE* getHandle(lua_State *L, int index);
 static void addConstant(lua_State *L, const char* name, unsigned long value);
+static int pointerEquals(lua_State *L);
 
 #endif

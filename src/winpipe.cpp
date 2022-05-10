@@ -1,5 +1,7 @@
 #include "winpipe.h"
 
+#include <stdio.h>
+
 const char* METATABLE_HANDLE = "winpipe.HANDLE";
 
 static int lib_constants(lua_State *L) {
@@ -89,6 +91,14 @@ static void addConstant(lua_State *L, const char* name, unsigned long value) {
     lua_settable(L, -3);
 }
 
+static int pointerEquals(lua_State *L) {
+    void* p1 = lua_touserdata(L, 1);
+    void* p2 = lua_touserdata(L, 2);
+    bool result = (p1 == p2);
+    lua_pushboolean(L, result);
+    return 1;
+}
+
 // DLL entry point
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {
     return TRUE;
@@ -104,6 +114,12 @@ static const struct luaL_Reg library_functions[] = {
 
 extern "C" LUALIB_API int luaopen_winpipe(lua_State *L) {
     luaL_newmetatable(L, METATABLE_HANDLE);
+    // set __eq to HANDLE
+    lua_pushstring(L, "__eq");
+    lua_pushcfunction(L, pointerEquals);
+    lua_settable(L, -3);
+    printf("%d", lua_gettop(L));
+
     luaL_newlib(L, library_functions);
     return 1;
 }
