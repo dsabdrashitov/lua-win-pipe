@@ -1,46 +1,31 @@
-#include <windows.h>
-#include <stdio.h>
- 
-// Lua marks for building as DLL
-#define LUA_LIB
-#define LUA_BUILD_AS_DLL
- 
-// Lua headers
-extern "C" {
-#include <lauxlib.h>
-#include <lua.h>
-}
+#include "winpipe.h"
 
-static void add_constant(lua_State *L, const char* name, unsigned long value) {
-    lua_pushstring(L, name);
-    lua_pushnumber(L, value);
-    lua_settable(L, -3);
-}
+const char* METATABLE_HANDLE = "winpipe.HANDLE";
 
 static int lib_constants(lua_State *L) {
     lua_newtable(L);
-    //add_constant(L, "", );
+    //addConstant(L, "", );
     // CreateNamedPipe:dwOpenMode, same for all
-    add_constant(L, "PIPE_ACCESS_INBOUND", PIPE_ACCESS_INBOUND);
-    add_constant(L, "PIPE_ACCESS_OUTBOUND", PIPE_ACCESS_OUTBOUND);
-    add_constant(L, "PIPE_ACCESS_DUPLEX", PIPE_ACCESS_DUPLEX);
+    addConstant(L, "PIPE_ACCESS_INBOUND", PIPE_ACCESS_INBOUND);
+    addConstant(L, "PIPE_ACCESS_OUTBOUND", PIPE_ACCESS_OUTBOUND);
+    addConstant(L, "PIPE_ACCESS_DUPLEX", PIPE_ACCESS_DUPLEX);
     // CreateNamedPipe:dwOpenMode, can differ
-    add_constant(L, "FILE_FLAG_FIRST_PIPE_INSTANCE", FILE_FLAG_FIRST_PIPE_INSTANCE);
-    add_constant(L, "FILE_FLAG_WRITE_THROUGH", FILE_FLAG_WRITE_THROUGH);
-    add_constant(L, "FILE_FLAG_OVERLAPPED", FILE_FLAG_OVERLAPPED);
-    add_constant(L, "WRITE_DAC", WRITE_DAC);
-    add_constant(L, "WRITE_OWNER", WRITE_OWNER);
-    add_constant(L, "ACCESS_SYSTEM_SECURITY", ACCESS_SYSTEM_SECURITY);
+    addConstant(L, "FILE_FLAG_FIRST_PIPE_INSTANCE", FILE_FLAG_FIRST_PIPE_INSTANCE);
+    addConstant(L, "FILE_FLAG_WRITE_THROUGH", FILE_FLAG_WRITE_THROUGH);
+    addConstant(L, "FILE_FLAG_OVERLAPPED", FILE_FLAG_OVERLAPPED);
+    addConstant(L, "WRITE_DAC", WRITE_DAC);
+    addConstant(L, "WRITE_OWNER", WRITE_OWNER);
+    addConstant(L, "ACCESS_SYSTEM_SECURITY", ACCESS_SYSTEM_SECURITY);
     // CreateNamedPipe:dwPipeMode, same for all
-    add_constant(L, "PIPE_TYPE_BYTE", PIPE_TYPE_BYTE);
-    add_constant(L, "PIPE_TYPE_MESSAGE", PIPE_TYPE_MESSAGE);
+    addConstant(L, "PIPE_TYPE_BYTE", PIPE_TYPE_BYTE);
+    addConstant(L, "PIPE_TYPE_MESSAGE", PIPE_TYPE_MESSAGE);
     // CreateNamedPipe:dwPipeMode, can differ
-    add_constant(L, "PIPE_READMODE_BYTE", PIPE_READMODE_BYTE);
-    add_constant(L, "PIPE_READMODE_MESSAGE", PIPE_READMODE_MESSAGE);
-    add_constant(L, "PIPE_WAIT", PIPE_WAIT);
-    add_constant(L, "PIPE_NOWAIT", PIPE_NOWAIT);
-    add_constant(L, "PIPE_ACCEPT_REMOTE_CLIENTS", PIPE_ACCEPT_REMOTE_CLIENTS);
-    add_constant(L, "PIPE_REJECT_REMOTE_CLIENTS", PIPE_REJECT_REMOTE_CLIENTS);
+    addConstant(L, "PIPE_READMODE_BYTE", PIPE_READMODE_BYTE);
+    addConstant(L, "PIPE_READMODE_MESSAGE", PIPE_READMODE_MESSAGE);
+    addConstant(L, "PIPE_WAIT", PIPE_WAIT);
+    addConstant(L, "PIPE_NOWAIT", PIPE_NOWAIT);
+    addConstant(L, "PIPE_ACCEPT_REMOTE_CLIENTS", PIPE_ACCEPT_REMOTE_CLIENTS);
+    addConstant(L, "PIPE_REJECT_REMOTE_CLIENTS", PIPE_REJECT_REMOTE_CLIENTS);
     
     return 1;
 }
@@ -60,6 +45,8 @@ static int lib_mask(lua_State *L) {
 static int lib_CreateNamedPipe(lua_State *L) {
    // TODO: add __gc to handle metatable
    HANDLE* pHandle = (HANDLE*) lua_newuserdata(L, sizeof(HANDLE));
+   luaL_getmetatable(L, METATABLE_HANDLE);
+   lua_setmetatable(L, -2);
    
    // get and encode 1 argument
    const char* pName = luaL_checkstring(L, 1);
@@ -80,20 +67,31 @@ static int lib_CreateNamedPipe(lua_State *L) {
          nTimeoutMs,
          NULL);
    
-   //TODO: push result to stack
    return 1;
 }
 
 static int lib_CloseHandle(lua_State *L) {
-   HANDLE* pHandle = (HANDLE*) lua_touserdata(L, 1);
-   WINBOOL result = CloseHandle(*pHandle);
-   lua_pushboolean(L, result);
-   return 1;
+    HANDLE* pHandle = getHandle(L, 1);
+    WINBOOL result = CloseHandle(*pHandle);
+    lua_pushboolean(L, result);
+    return 1;
+}
+
+static HANDLE* getHandle(lua_State *L, int index) {
+    HANDLE* pHandle = (HANDLE*) luaL_checkudata(L, index, METATABLE_HANDLE);
+    luaL_argcheck(L, pHandle != NULL, index, "HANDLE* expected");
+    return pHandle;
+}
+
+static void addConstant(lua_State *L, const char* name, unsigned long value) {
+    lua_pushstring(L, name);
+    lua_pushnumber(L, value);
+    lua_settable(L, -3);
 }
 
 // DLL entry point
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {
-   return TRUE;
+    return TRUE;
 }
 
 static const struct luaL_Reg library_functions[] = {
@@ -105,6 +103,7 @@ static const struct luaL_Reg library_functions[] = {
 };
 
 extern "C" LUALIB_API int luaopen_winpipe(lua_State *L) {
+    luaL_newmetatable(L, METATABLE_HANDLE);
     luaL_newlib(L, library_functions);
     return 1;
 }
