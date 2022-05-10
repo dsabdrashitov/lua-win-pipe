@@ -13,8 +13,9 @@ extern "C" {
 
 #include <windows.h>
 
-static HANDLE* getHandle(lua_State *L, int index);
-static void addConstant(lua_State *L, const char* name, unsigned long value);
+static HANDLE getHandle(lua_State *L, int index);
+static void addLongConstant(lua_State *L, const char* name, unsigned long value);
+static void addPointerConstant(lua_State *L, const char* name, void* value, const char* metatable);
 static int pointerEquals(lua_State *L);
 
 #endif

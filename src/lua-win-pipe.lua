@@ -18,5 +18,7 @@ for name, val in pairs(winpipe.winpipe_constants()) do
 end
 
 lua_win_pipe.mask = winpipe.winpipe_mask
+lua_win_pipe.CreateNamedPipe = winpipe.winpipe_CreateNamedPipe
+lua_win_pipe.CloseHandle = winpipe.winpipe_CloseHandle
 
 return lua_win_pipe
