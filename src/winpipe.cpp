@@ -2,19 +2,9 @@
 
 #include "metaphandle.h"
 #include "constants.h"
+#include "utils.h"
 #include <windows.h>
 
-
-static int lib_mask(lua_State* L) {
-    int top = lua_gettop(L);
-    long long result = 0;
-    for (int i = 1; i <= top; i++) {
-        long long arg = luaL_checkinteger(L, i);
-        result |= arg;
-    }
-    lua_pushnumber(L, result);
-    return 1;
-}
 
 static int lib_CreateNamedPipe(lua_State* L) {   
    const char* pName = luaL_checkstring(L, 1);
