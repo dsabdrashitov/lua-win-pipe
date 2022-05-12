@@ -1,7 +1,7 @@
 #include "constants.h"
 
 #include <windows.h>
-#include "metaphandle.h"
+#include "phandle.h"
 
 
 static void addLongConstant(lua_State* L, const char* name, unsigned long value) {

@@ -1,55 +1,14 @@
 #include "winpipe.h"
 
-#include "metaphandle.h"
-#include "constants.h"
-#include "utils.h"
-#include "bytebuffer.h"
 #include <windows.h>
+#include "bytebuffer.h"
+#include "constants.h"
+#include "phandle.h"
+#include "utils.h"
+#include "functions\createnamedpipe.h"
+#include "functions\connectnamedpipe.h"
+#include "functions\closehandle.h"
 
-
-static int lib_CreateNamedPipe(lua_State* L) {   
-   const char* pName = luaL_checkstring(L, 1);
-   DWORD dwOpenMode = luaL_checkinteger(L, 2);
-   DWORD dwPipeMode = luaL_checkinteger(L, 3);
-   DWORD nMaxInstances = luaL_checkinteger(L, 4);
-   DWORD nOutBufferSize = luaL_checkinteger(L, 5);
-   DWORD nInBufferSize = luaL_checkinteger(L, 6);
-   DWORD nTimeoutMs = luaL_checkinteger(L, 7);
-   luaL_argcheck(L, lua_isnil(L, 8), 8, "nil expected");
-
-   HANDLE* pHandle = createHandlePointer(L);
-   
-   *pHandle = CreateNamedPipe(
-         pName,
-         dwOpenMode,
-         dwPipeMode,
-         nMaxInstances,
-         nOutBufferSize,
-         nInBufferSize,
-         nTimeoutMs,
-         NULL);
-   
-   return 1;
-}
-
-static int lib_ConnectNamedPipe(lua_State* L) {
-    HANDLE handle = *(getHandlePointer(L, 1));
-    luaL_argcheck(L, lua_isnil(L, 2), 2, "nil expected");
-
-    BOOL result = ConnectNamedPipe(handle, NULL);
-
-    lua_pushboolean(L, result);
-    return 1;
-}
-
-static int lib_CloseHandle(lua_State* L) {
-    HANDLE handle = *(getHandlePointer(L, 1));
-
-    WINBOOL result = CloseHandle(handle);
-    
-    lua_pushboolean(L, result);
-    return 1;
-}
 
 // DLL entry point
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {

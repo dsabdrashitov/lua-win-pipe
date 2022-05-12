@@ -1,4 +1,4 @@
-#include "metaphandle.h"
+#include "phandle.h"
 
 #include "utils.h"
 
@@ -7,9 +7,9 @@ const char* METATABLE_PHANDLE = "winpipe.pHANDLE";
 
 void registerMetaPHandle(lua_State* L) {
     luaL_newmetatable(L, METATABLE_PHANDLE);
-    // set __eq to HANDLE
+    // set __eq
     lua_pushstring(L, "__eq");
-    lua_pushcfunction(L, pointerEquals);
+    lua_pushcfunction(L, meta_pointerEquals);
     lua_settable(L, -3);
     // remove metatable from stack
     lua_settop(L, -1);

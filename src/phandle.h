@@ -1,5 +1,5 @@
-#ifndef LUAWINPIPE_METAPHANDLE_H
-#define LUAWINPIPE_METAPHANDLE_H
+#ifndef LUAWINPIPE_PHANDLE_H
+#define LUAWINPIPE_PHANDLE_H
 
 #include "common.h"
 #include <windows.h>
