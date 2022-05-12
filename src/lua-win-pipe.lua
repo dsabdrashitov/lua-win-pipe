@@ -11,13 +11,15 @@ local winpipe = package.loadlib(root_path .. "winpipe.dll", "luaopen_winpipe")()
 -- Restore path
 package.path = prev_path
 
-lua_win_pipe.dll = winpipe
-
 for name, val in pairs(winpipe.winpipe_constants()) do
     lua_win_pipe[name] = val
 end
 
 lua_win_pipe.mask = winpipe.winpipe_mask
+lua_win_pipe.newBuffer = winpipe.winpipe_newBuffer
+lua_win_pipe.getBuffer = winpipe.winpipe_getBuffer
+lua_win_pipe.toBuffer = winpipe.winpipe_toBuffer
+
 lua_win_pipe.CreateNamedPipe = winpipe.winpipe_CreateNamedPipe
 lua_win_pipe.ConnectNamedPipe = winpipe.winpipe_ConnectNamedPipe
 lua_win_pipe.CloseHandle = winpipe.winpipe_CloseHandle
