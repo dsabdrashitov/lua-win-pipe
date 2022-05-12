@@ -1,7 +1,5 @@
 #include "winpipe.h"
 
-const char* METATABLE_HANDLE = "winpipe.HANDLE";
-
 static int lib_constants(lua_State* L) {
     lua_newtable(L);
     
@@ -29,7 +27,7 @@ static int lib_constants(lua_State* L) {
     // CreateNamedPipe:nMaxInstances
     addLongConstant(L, "PIPE_UNLIMITED_INSTANCES", PIPE_UNLIMITED_INSTANCES);
     // INVALID_HANDLE_VALUE
-    addPointerConstant(L, "INVALID_HANDLE_VALUE", INVALID_HANDLE_VALUE, METATABLE_HANDLE);
+    addPointerConstant(L, "INVALID_HANDLE_VALUE", INVALID_HANDLE_VALUE, NULL);
 
     return 1;
 }
@@ -55,10 +53,8 @@ static int lib_CreateNamedPipe(lua_State* L) {
    DWORD nTimeoutMs = luaL_checkinteger(L, 7);
    luaL_argcheck(L, lua_isnil(L, 8), 8, "nil expected");
 
-   HANDLE* pHandle = (HANDLE*) lua_newuserdata(L, sizeof(HANDLE));
-   luaL_getmetatable(L, METATABLE_HANDLE);
-   lua_setmetatable(L, -2);
-
+   HANDLE* pHandle = createHandlePointer(L);
+   
    *pHandle = CreateNamedPipe(
          pName,
          dwOpenMode,
@@ -73,26 +69,22 @@ static int lib_CreateNamedPipe(lua_State* L) {
 }
 
 static int lib_ConnectNamedPipe(lua_State* L) {
-    HANDLE handle = getHandle(L, 1);
+    HANDLE handle = *(getHandlePointer(L, 1));
     luaL_argcheck(L, lua_isnil(L, 2), 2, "nil expected");
 
     BOOL result = ConnectNamedPipe(handle, NULL);
+
     lua_pushboolean(L, result);
     return 1;
 }
 
 static int lib_CloseHandle(lua_State* L) {
-    HANDLE handle = getHandle(L, 1);
+    HANDLE handle = *(getHandlePointer(L, 1));
 
     WINBOOL result = CloseHandle(handle);
+    
     lua_pushboolean(L, result);
     return 1;
-}
-
-static HANDLE getHandle(lua_State* L, int index) {
-    HANDLE* pHandle = (HANDLE*) luaL_checkudata(L, index, METATABLE_HANDLE);
-    luaL_argcheck(L, pHandle != NULL, index, "HANDLE* expected");
-    return *pHandle;
 }
 
 static void addLongConstant(lua_State* L, const char* name, unsigned long value) {
@@ -111,14 +103,6 @@ static void addPointerConstant(lua_State* L, const char* name, void* value, cons
     lua_settable(L, -3);
 }
 
-static int pointerEquals(lua_State* L) {
-    void** p1 = (void**) lua_touserdata(L, 1);
-    void** p2 = (void**) lua_touserdata(L, 2);
-    bool result = (*p1 == *p2);
-    lua_pushboolean(L, result);
-    return 1;
-}
-
 // DLL entry point
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {
     return TRUE;
@@ -134,14 +118,7 @@ static const struct luaL_Reg library_functions[] = {
 };
 
 extern "C" LUALIB_API int luaopen_winpipe(lua_State* L) {
-    luaL_newmetatable(L, METATABLE_HANDLE);
-
-    // set __eq to HANDLE
-    lua_pushstring(L, "__eq");
-    lua_pushcfunction(L, pointerEquals);
-    lua_settable(L, -3);
-    // settable pops 2 values from the stack
-
+    registerMetaPHandle(L);
     luaL_newlib(L, library_functions);
     return 1;
 }
