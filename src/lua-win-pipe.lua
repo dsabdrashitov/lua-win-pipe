@@ -19,9 +19,12 @@ lua_win_pipe.mask = winpipe.winpipe_mask
 lua_win_pipe.newBuffer = winpipe.winpipe_newBuffer
 lua_win_pipe.getBuffer = winpipe.winpipe_getBuffer
 lua_win_pipe.toBuffer = winpipe.winpipe_toBuffer
+lua_win_pipe.newPDWORD = winpipe.winpipe_newPDWORD
+lua_win_pipe.getPDWORD = winpipe.winpipe_getPDWORD
 
 lua_win_pipe.CreateNamedPipe = winpipe.winpipe_CreateNamedPipe
 lua_win_pipe.ConnectNamedPipe = winpipe.winpipe_ConnectNamedPipe
 lua_win_pipe.CloseHandle = winpipe.winpipe_CloseHandle
+lua_win_pipe.PeekNamedPipe = winpipe.winpipe_PeekNamedPipe
 
 return lua_win_pipe

@@ -9,22 +9,6 @@ lwp = require("build.lua-win-pipe.lua-win-pipe")
 -- Restore path
 package.path = prev_path
 
-local buf = lwp.newBuffer(10)
-print(buf)
-print("'" .. lwp.getBuffer(buf, 10) .. '"')
-buf = lwp.toBuffer("hello:)")
-print(buf)
-print("'" .. lwp.getBuffer(buf, ("hello:)__"):len()) .. '"')
-
-print(lwp.mask(
-        lwp.FILE_FLAG_FIRST_PIPE_INSTANCE,
-        lwp.FILE_FLAG_WRITE_THROUGH,
-        lwp.FILE_FLAG_OVERLAPPED
-))
-
-print(lwp.INVALID_HANDLE_VALUE == lwp.INVALID_HANDLE_VALUE)
-print(lwp.INVALID_HANDLE_VALUE ~= lwp.INVALID_HANDLE_VALUE)
-
 local handle = lwp.CreateNamedPipe(
         "\\\\.\\pipe\\testPipe",
         lwp.PIPE_ACCESS_DUPLEX,
@@ -37,8 +21,21 @@ local handle = lwp.CreateNamedPipe(
 )
 
 print(handle == lwp.INVALID_HANDLE_VALUE)
-print(lwp.INVALID_HANDLE_VALUE ~= handle)
+print("open: " .. tostring(lwp.INVALID_HANDLE_VALUE ~= handle))
 
-print(lwp.ConnectNamedPipe(handle, nil))
+print("connect: " .. tostring(lwp.ConnectNamedPipe(handle, nil)))
 
-print(lwp.CloseHandle(handle))
+local bufsize = 10
+local buf = lwp.newBuffer(bufsize)
+local lpBytesRead = lwp.newPDWORD(0)
+local lpTotalBytesAvail = lwp.newPDWORD(0)
+local lpBytesLeftThisMessage = lwp.newPDWORD(0)
+print("peek: " .. tostring(
+        lwp.PeekNamedPipe(handle, buf, bufsize, lpBytesRead, lpTotalBytesAvail, lpBytesLeftThisMessage)))
+
+print('"' .. tostring(lwp.getBuffer(buf, bufsize)) .. "'")
+print(lwp.getPDWORD(lpBytesRead))
+print(lwp.getPDWORD(lpTotalBytesAvail))
+print(lwp.getPDWORD(lpBytesLeftThisMessage))
+
+print("close: " .. tostring(lwp.CloseHandle(handle)))
