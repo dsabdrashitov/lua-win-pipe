@@ -1,5 +1,8 @@
 #include "metaphandle.h"
 
+#include "utils.h"
+
+
 const char* METATABLE_PHANDLE = "winpipe.pHANDLE";
 
 void registerMetaPHandle(lua_State* L) {
@@ -25,7 +28,7 @@ HANDLE* createHandlePointer(lua_State* L) {
     return pHandle;
 }
 
-void pushHandlePointer(lua_State* L, HANDLE handle) {
+void pushHandle(lua_State* L, HANDLE handle) {
     HANDLE* pHandle = createHandlePointer(L);
     *pHandle = handle;
 }
