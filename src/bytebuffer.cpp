@@ -1,16 +1,12 @@
 #include "bytebuffer.h"
 
-#include "utils.h"
-
 
 const char* METATABLE_BUFFER = "winpipe.buffer";
 
 void registerMetaBuffer(lua_State* L) {
     luaL_newmetatable(L, METATABLE_BUFFER);
-    // set __eq
-    lua_pushstring(L, "__eq");
-    lua_pushcfunction(L, meta_pointerEquals);
-    lua_settable(L, -3);
+    // pointerEquals cant be applied to buffer, because buffer is not pointer to pointer :(
+    // so there is no __eq setting
     // remove metatable from stack
     lua_settop(L, -1);
 }
