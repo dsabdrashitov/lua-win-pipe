@@ -26,5 +26,7 @@ lua_win_pipe.CreateNamedPipe = winpipe.winpipe_CreateNamedPipe
 lua_win_pipe.ConnectNamedPipe = winpipe.winpipe_ConnectNamedPipe
 lua_win_pipe.CloseHandle = winpipe.winpipe_CloseHandle
 lua_win_pipe.PeekNamedPipe = winpipe.winpipe_PeekNamedPipe
+lua_win_pipe.ReadFile = winpipe.winpipe_ReadFile
+lua_win_pipe.WriteFile = winpipe.winpipe_WriteFile
 
 return lua_win_pipe

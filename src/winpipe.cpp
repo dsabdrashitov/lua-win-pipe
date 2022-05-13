@@ -10,6 +10,8 @@
 #include "functions\connectnamedpipe.h"
 #include "functions\closehandle.h"
 #include "functions\peeknamedpipe.h"
+#include "functions\readfile.h"
+#include "functions\writefile.h"
 
 
 // DLL entry point
@@ -22,6 +24,8 @@ static const struct luaL_Reg library_functions[] = {
     {"winpipe_ConnectNamedPipe", lib_ConnectNamedPipe},
     {"winpipe_CloseHandle", lib_CloseHandle},
     {"winpipe_PeekNamedPipe", lib_PeekNamedPipe},
+    {"winpipe_ReadFile", lib_ReadFile},
+    {"winpipe_WriteFile", lib_WriteFile},
     {"winpipe_constants", lib_constants},
     {"winpipe_mask", lib_mask},
     {"winpipe_getBuffer", lib_getBuffer},
