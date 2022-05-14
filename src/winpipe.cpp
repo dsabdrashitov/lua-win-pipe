@@ -7,6 +7,7 @@
 #include "phandle.h"
 #include "utils.h"
 #include "functions\createnamedpipe.h"
+#include "functions\createfile.h"
 #include "functions\connectnamedpipe.h"
 #include "functions\closehandle.h"
 #include "functions\peeknamedpipe.h"
@@ -21,6 +22,7 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {
 
 static const struct luaL_Reg library_functions[] = {
     {"winpipe_CreateNamedPipe", lib_CreateNamedPipe},
+    {"winpipe_CreateFile", lib_CreateFile},
     {"winpipe_ConnectNamedPipe", lib_ConnectNamedPipe},
     {"winpipe_CloseHandle", lib_CloseHandle},
     {"winpipe_PeekNamedPipe", lib_PeekNamedPipe},

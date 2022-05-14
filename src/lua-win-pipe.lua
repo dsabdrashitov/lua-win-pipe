@@ -23,6 +23,7 @@ lua_win_pipe.newPDWORD = winpipe.winpipe_newPDWORD
 lua_win_pipe.getPDWORD = winpipe.winpipe_getPDWORD
 
 lua_win_pipe.CreateNamedPipe = winpipe.winpipe_CreateNamedPipe
+lua_win_pipe.CreateFile = winpipe.winpipe_CreateFile
 lua_win_pipe.ConnectNamedPipe = winpipe.winpipe_ConnectNamedPipe
 lua_win_pipe.CloseHandle = winpipe.winpipe_CloseHandle
 lua_win_pipe.PeekNamedPipe = winpipe.winpipe_PeekNamedPipe

@@ -66,9 +66,9 @@ function main()
         local message = lwp.getBuffer(buf, len)
         print("message: '" .. message .. "'")
         local reply = "this is reply to '" .. message .. "'"
-        for i = 1, message:len(), replysize do
-            local cnt = math.min(message:len() - i + 1, replysize)
-            local reply = lwp.toBuffer(reply:sub(i, cnt))
+        for i = 1, reply:len(), replysize do
+            local cnt = math.min(reply:len() - i + 1, replysize)
+            local reply = lwp.toBuffer(reply:sub(i, i + cnt - 1))
             ret = lwp.WriteFile(hPipe, reply, cnt, lpBytesRead, nil)
             len = lwp.getPDWORD(lpBytesRead)
             print("write: " .. tostring(len))
