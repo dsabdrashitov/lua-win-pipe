@@ -9,9 +9,18 @@ lwp = require("build.lua-win-pipe.lua-win-pipe")
 -- Restore path
 package.path = prev_path
 
+local PIPE_NAME = "\\\\.\\pipe\\lwp_test"
+
 function main()
+
+    local ret = lwp.WaitNamedPipe(PIPE_NAME, 15000)
+    if not ret then
+        print("Error: WaitNamedPipe failed (" .. tostring(lwp.GetLastError()) .. ")")
+        return
+    end
+
     local hPipe = lwp.CreateFile(
-            "\\\\.\\pipe\\lwp_test",
+            PIPE_NAME,
             lwp.mask(lwp.GENERIC_READ, lwp.GENERIC_WRITE),
             lwp.FILE_NO_SHARE,
             nil,

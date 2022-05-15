@@ -22,13 +22,14 @@ lua_win_pipe.toBuffer = winpipe.winpipe_toBuffer
 lua_win_pipe.newPDWORD = winpipe.winpipe_newPDWORD
 lua_win_pipe.getPDWORD = winpipe.winpipe_getPDWORD
 
-lua_win_pipe.CreateNamedPipe = winpipe.winpipe_CreateNamedPipe
-lua_win_pipe.CreateFile = winpipe.winpipe_CreateFile
-lua_win_pipe.ConnectNamedPipe = winpipe.winpipe_ConnectNamedPipe
 lua_win_pipe.CloseHandle = winpipe.winpipe_CloseHandle
+lua_win_pipe.ConnectNamedPipe = winpipe.winpipe_ConnectNamedPipe
+lua_win_pipe.CreateFile = winpipe.winpipe_CreateFile
+lua_win_pipe.CreateNamedPipe = winpipe.winpipe_CreateNamedPipe
+lua_win_pipe.GetLastError = winpipe.winpipe_GetLastError
 lua_win_pipe.PeekNamedPipe = winpipe.winpipe_PeekNamedPipe
 lua_win_pipe.ReadFile = winpipe.winpipe_ReadFile
+lua_win_pipe.WaitNamedPipe = winpipe.winpipe_WaitNamedPipe
 lua_win_pipe.WriteFile = winpipe.winpipe_WriteFile
-lua_win_pipe.GetLastError = winpipe.winpipe_GetLastError
 
 return lua_win_pipe
