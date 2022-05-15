@@ -21,7 +21,7 @@ function main()
     )
 
     if (hPipe == lwp.INVALID_HANDLE_VALUE) then
-        print("Error: invalid handle")
+        print("Error: invalid handle (" .. tostring(lwp.GetLastError()) .. ")")
         return
     else
         print("Created.")

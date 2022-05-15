@@ -13,6 +13,7 @@
 #include "functions\peeknamedpipe.h"
 #include "functions\readfile.h"
 #include "functions\writefile.h"
+#include "functions\getlasterror.h"
 
 
 // DLL entry point
@@ -28,6 +29,7 @@ static const struct luaL_Reg library_functions[] = {
     {"winpipe_PeekNamedPipe", lib_PeekNamedPipe},
     {"winpipe_ReadFile", lib_ReadFile},
     {"winpipe_WriteFile", lib_WriteFile},
+    {"winpipe_GetLastError", lib_GetLastError},
     {"winpipe_constants", lib_constants},
     {"winpipe_mask", lib_mask},
     {"winpipe_getBuffer", lib_getBuffer},

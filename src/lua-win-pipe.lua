@@ -29,5 +29,6 @@ lua_win_pipe.CloseHandle = winpipe.winpipe_CloseHandle
 lua_win_pipe.PeekNamedPipe = winpipe.winpipe_PeekNamedPipe
 lua_win_pipe.ReadFile = winpipe.winpipe_ReadFile
 lua_win_pipe.WriteFile = winpipe.winpipe_WriteFile
+lua_win_pipe.GetLastError = winpipe.winpipe_GetLastError
 
 return lua_win_pipe
