@@ -6,7 +6,7 @@ LIBS := lua53
 
 BUILD_DIR := ./build
 SRC_PREFIX := ./src
-SRC_DIRS := $(SRC_PREFIX)
+SRC_DIRS := $(SRC_PREFIX) $(SRC_PREFIX)/functions
 INC_DIRS := ./include
 LIB_DIRS := ./lib
 
