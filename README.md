@@ -1,4 +1,9 @@
 # lua-win-pipe
-Lua wrapper for windows named pipes.
-Need it for translating of some api from Lua to Python, but have found no appropriate existing solution. So will try to implement it myself.
-For now there is no working code in this repo.
+Lua wrapper for windows named pipes. This library covers only small set of 
+functions from <windows.h> which is needed to interoperate with Named Pipes 
+in Windows. Example of using the library is given in files 
+[sample-client.lua][sample-client] and [sample-server.lua][sample-server].
+
+
+[sample-client]: sample-client.lua
+[sample-server]: sample-server.lua
