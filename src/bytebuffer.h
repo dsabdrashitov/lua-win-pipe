@@ -6,7 +6,7 @@
 void registerMetaBuffer(lua_State* L);
 char* getBuffer(lua_State* L, int index);
 int lib_newBuffer(lua_State* L);
-int lib_getBuffer(lua_State* L);
+int lib_fromBuffer(lua_State* L);
 int lib_toBuffer(lua_State* L);
 
 #endif

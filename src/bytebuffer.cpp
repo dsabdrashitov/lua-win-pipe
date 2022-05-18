@@ -30,7 +30,7 @@ int lib_newBuffer(lua_State* L) {
     return 1;
 }
 
-int lib_getBuffer(lua_State* L) {
+int lib_fromBuffer(lua_State* L) {
     char* buffer = getBuffer(L, 1);
     int count = luaL_checkinteger(L, 2);
 
@@ -40,11 +40,14 @@ int lib_getBuffer(lua_State* L) {
 }
 
 int lib_toBuffer(lua_State* L) {
+    char* buffer = getBuffer(L, 1);
     size_t len;
-    const char* str = luaL_checklstring(L, 1, &len);
-    char* buffer = newBuffer(L, len);
+    const char* str = luaL_checklstring(L, 2, &len);
+    
     for (int i = 0; i < len; i++) {
         buffer[i] = str[i];
     }
+    
+    lua_pushnil(L);
     return 1;
 }

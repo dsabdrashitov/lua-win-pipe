@@ -9,9 +9,18 @@ lwp = require("build.lua-win-pipe.lua-win-pipe")
 -- Restore path
 package.path = prev_path
 
+PIPE_NAME = "\\\\.\\pipe\\lwp_test"
+
 function main()
+
+    local ret = lwp.WaitNamedPipe(PIPE_NAME, 15000)
+    if not ret then
+        print("Error: WaitNamedPipe failed (" .. tostring(lwp.GetLastError()) .. ")")
+        return
+    end
+
     local hPipe = lwp.CreateFile(
-            "\\\\.\\pipe\\lwp_test",
+            PIPE_NAME,
             lwp.mask(lwp.GENERIC_READ, lwp.GENERIC_WRITE),
             lwp.FILE_NO_SHARE,
             nil,
@@ -21,68 +30,86 @@ function main()
     )
 
     if (hPipe == lwp.INVALID_HANDLE_VALUE) then
-        print("Error: invalid handle")
+        print("Error: invalid handle (" .. tostring(lwp.GetLastError()) .. ")")
         return
     else
         print("Created.")
     end
 
-    --TODO: WaitNamedPipe
-    local ret = true
-    if not ret then
-        print("Error: connect failed")
-        close(hPipe)
-        return
-    else
-        print("Connected.")
-    end
-
-    local lpBytesRead = lwp.newPDWORD(0)
-    local lpTotalBytesAvail = lwp.newPDWORD(0)
-    local lpBytesLeftThisMessage = lwp.newPDWORD(0)
+    local pdwBytesDone = lwp.newPDWORD(0)
+    local pdwTotalBytesAvail = lwp.newPDWORD(0)
+    local pdwBytesLeftThisMessage = lwp.newPDWORD(0)
 
     while true do
-        local instr = io.read("*line")
-        while instr:len() > 0 do
-            local buf = lwp.toBuffer(instr)
-            ret = lwp.WriteFile(hPipe, buf, instr:len(), lpBytesRead, nil)
-            local len = lwp.getPDWORD(lpBytesRead)
-            print("write: " .. tostring(len))
-            if not ret then
-                print("Error: write failed")
-                close(hPipe)
-                return
-            end
-            instr = instr.sub(len + 1, instr:len())
+        local strIn = io.read("*line")
+        if strIn == "" then
+            print("Can't send empty message")
+            goto continue_main_loop
+        end
+        local writeBuffer = lwp.newBuffer(strIn:len())
+        lwp.toBuffer(writeBuffer, strIn)
+        ret = lwp.WriteFile(hPipe, writeBuffer, strIn:len(), pdwBytesDone, nil)
+        print("write: " .. tostring(lwp.getPDWORD(pdwBytesDone)))
+        if (not ret) or (lwp.getPDWORD(pdwBytesDone) ~= strIn:len()) then
+            print("Error: write failed (" .. tostring(lwp.GetLastError()) .. ")")
+            goto end_main_loop
         end
 
+        -- Answer is not empty so wait some data arrive
+        local lastprint = nil
         while true do
-            ret = lwp.PeekNamedPipe(hPipe, nil, 0, lpBytesRead, lpTotalBytesAvail, lpBytesLeftThisMessage)
-            print("peek: " ..
-                    tostring(lwp.getPDWORD(lpBytesRead)) .. " " ..
-                    tostring(lwp.getPDWORD(lpTotalBytesAvail)) .. " " ..
-                    tostring(lwp.getPDWORD(lpBytesLeftThisMessage)))
-            if not ret then
-                print("Error: peek failed")
-                close(hPipe)
-                return
+            ret = lwp.PeekNamedPipe(hPipe, nil, 0, pdwBytesDone, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
+            local toprint = "peek: " ..
+                    tostring(lwp.getPDWORD(pdwBytesDone)) .. " " ..
+                    tostring(lwp.getPDWORD(pdwTotalBytesAvail)) .. " " ..
+                    tostring(lwp.getPDWORD(pdwBytesLeftThisMessage))
+            if toprint ~= lastprint then
+                print(toprint)
+                lastprint = toprint
             end
-            local len = lwp.getPDWORD(lpTotalBytesAvail)
+            if not ret then
+                print("Error: peek failed (" .. tostring(lwp.GetLastError()) .. ")")
+                goto end_main_loop
+            end
+            local len = lwp.getPDWORD(pdwTotalBytesAvail)
+            if len ~= 0 then
+                goto end_wait_loop
+            end
+        end
+        ::end_wait_loop::
+
+        local readParts = {}
+        while true do
+            ret = lwp.PeekNamedPipe(hPipe, nil, 0, pdwBytesDone, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
+            print("peek: " ..
+                    tostring(lwp.getPDWORD(pdwBytesDone)) .. " " ..
+                    tostring(lwp.getPDWORD(pdwTotalBytesAvail)) .. " " ..
+                    tostring(lwp.getPDWORD(pdwBytesLeftThisMessage)))
+            if not ret then
+                print("Error: peek failed (" .. tostring(lwp.GetLastError()) .. ")")
+                goto end_main_loop
+            end
+            local len = lwp.getPDWORD(pdwTotalBytesAvail)
             if len == 0 then
-                break
+                goto end_read_loop
             end
             local buf = lwp.newBuffer(len)
-            ret = lwp.ReadFile(hPipe, buf, len, lpBytesRead, nil)
-            local done = lwp.getPDWORD(lpBytesRead)
-            print("read: " .. tostring(done))
+            ret = lwp.ReadFile(hPipe, buf, len, pdwBytesDone, nil)
+            print("read: " .. tostring(lwp.getPDWORD(pdwBytesDone)))
             if not ret then
-                print("Error: read failed")
-                close(hPipe)
-                return
+                print("Error: read failed (" .. tostring(lwp.GetLastError()) .. ")")
+                goto end_main_loop
             end
-            io.write("answer: ", lwp.getBuffer(buf, done), "\n")
+            local readPart = lwp.fromBuffer(buf, lwp.getPDWORD(pdwBytesDone))
+            readParts[#readParts + 1] = readPart
         end
+        ::end_read_loop::
+        local reply = table.concat(readParts)
+
+        print("answer: " .. reply)
+        ::continue_main_loop::
     end
+    ::end_main_loop::
 
     print("Closing pipe.")
     close(hPipe)
@@ -91,7 +118,7 @@ end
 function close(hPipe)
     local ret = lwp.CloseHandle(hPipe)
     if not ret then
-        print("Error: pipe close failed")
+        print("Error: pipe close failed (" .. tostring(lwp.GetLastError()) .. ")")
     end
 end
 

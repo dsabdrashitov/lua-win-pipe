@@ -6,12 +6,14 @@
 #include "pdword.h"
 #include "phandle.h"
 #include "utils.h"
-#include "functions\createnamedpipe.h"
-#include "functions\createfile.h"
-#include "functions\connectnamedpipe.h"
 #include "functions\closehandle.h"
+#include "functions\connectnamedpipe.h"
+#include "functions\createfile.h"
+#include "functions\createnamedpipe.h"
+#include "functions\getlasterror.h"
 #include "functions\peeknamedpipe.h"
 #include "functions\readfile.h"
+#include "functions\waitnamedpipe.h"
 #include "functions\writefile.h"
 
 
@@ -21,16 +23,19 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {
 }
 
 static const struct luaL_Reg library_functions[] = {
-    {"winpipe_CreateNamedPipe", lib_CreateNamedPipe},
-    {"winpipe_CreateFile", lib_CreateFile},
     {"winpipe_ConnectNamedPipe", lib_ConnectNamedPipe},
     {"winpipe_CloseHandle", lib_CloseHandle},
+    {"winpipe_CreateFile", lib_CreateFile},
+    {"winpipe_CreateNamedPipe", lib_CreateNamedPipe},
+    {"winpipe_GetLastError", lib_GetLastError},
     {"winpipe_PeekNamedPipe", lib_PeekNamedPipe},
     {"winpipe_ReadFile", lib_ReadFile},
+    {"winpipe_WaitNamedPipe", lib_WaitNamedPipe},
     {"winpipe_WriteFile", lib_WriteFile},
+    
     {"winpipe_constants", lib_constants},
     {"winpipe_mask", lib_mask},
-    {"winpipe_getBuffer", lib_getBuffer},
+    {"winpipe_fromBuffer", lib_fromBuffer},
     {"winpipe_newBuffer", lib_newBuffer},
     {"winpipe_toBuffer", lib_toBuffer},
     {"winpipe_newPDWORD", lib_newPDWORD},

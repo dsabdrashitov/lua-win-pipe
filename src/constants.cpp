@@ -88,5 +88,35 @@ int lib_constants(lua_State* L) {
     addLongConstant(L, "SECURITY_IDENTIFICATION", SECURITY_IDENTIFICATION);
     addLongConstant(L, "SECURITY_IMPERSONATION", SECURITY_IMPERSONATION);
 
+    // Errors
+    // WriteFile
+    addLongConstant(L, "ERROR_IO_PENDING", ERROR_IO_PENDING);
+    addLongConstant(L, "ERROR_INVALID_USER_BUFFER", ERROR_INVALID_USER_BUFFER);
+    addLongConstant(L, "ERROR_NOT_ENOUGH_MEMORY", ERROR_NOT_ENOUGH_MEMORY);
+    addLongConstant(L, "ERROR_OPERATION_ABORTED", ERROR_OPERATION_ABORTED);
+    addLongConstant(L, "ERROR_NOT_ENOUGH_QUOTA", ERROR_NOT_ENOUGH_QUOTA);
+    addLongConstant(L, "ERROR_BROKEN_PIPE", ERROR_BROKEN_PIPE);
+    // ReadFile
+    addLongConstant(L, "ERROR_INSUFFICIENT_BUFFER", ERROR_INSUFFICIENT_BUFFER);
+    addLongConstant(L, "ERROR_HANDLE_EOF", ERROR_HANDLE_EOF);
+    addLongConstant(L, "ERROR_MORE_DATA", ERROR_MORE_DATA);
+    // CreateNamedPipe
+    addLongConstant(L, "ERROR_ACCESS_DENIED", ERROR_ACCESS_DENIED);
+    addLongConstant(L, "ERROR_INVALID_PARAMETER", ERROR_INVALID_PARAMETER);
+    // CreateFile
+    addLongConstant(L, "ERROR_SHARING_VIOLATION", ERROR_SHARING_VIOLATION);
+    addLongConstant(L, "ERROR_ALREADY_EXISTS", ERROR_ALREADY_EXISTS);
+    addLongConstant(L, "ERROR_FILE_EXISTS", ERROR_FILE_EXISTS);
+    addLongConstant(L, "ERROR_FILE_NOT_FOUND", ERROR_FILE_NOT_FOUND);
+    addLongConstant(L, "ERROR_PIPE_BUSY", ERROR_PIPE_BUSY);
+    // WaitNamedPipe
+    addLongConstant(L, "ERROR_SEM_TIMEOUT", ERROR_SEM_TIMEOUT);
+    // CloseHandle
+    addLongConstant(L, "ERROR_INVALID_HANDLE", ERROR_INVALID_HANDLE);
+    // ConnectNamedPipe
+    addLongConstant(L, "ERROR_PIPE_CONNECTED", ERROR_PIPE_CONNECTED);
+    addLongConstant(L, "ERROR_NO_DATA", ERROR_NO_DATA);
+    addLongConstant(L, "ERROR_PIPE_LISTENING", ERROR_PIPE_LISTENING);
+
     return 1;
 }
