@@ -35,7 +35,7 @@ static const struct luaL_Reg library_functions[] = {
     
     {"winpipe_constants", lib_constants},
     {"winpipe_mask", lib_mask},
-    {"winpipe_getBuffer", lib_getBuffer},
+    {"winpipe_getBuffer", lib_fromBuffer},
     {"winpipe_newBuffer", lib_newBuffer},
     {"winpipe_toBuffer", lib_toBuffer},
     {"winpipe_newPDWORD", lib_newPDWORD},

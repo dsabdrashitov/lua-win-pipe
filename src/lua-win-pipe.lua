@@ -17,7 +17,7 @@ end
 
 lua_win_pipe.mask = winpipe.winpipe_mask
 lua_win_pipe.newBuffer = winpipe.winpipe_newBuffer
-lua_win_pipe.getBuffer = winpipe.winpipe_getBuffer
+lua_win_pipe.fromBuffer = winpipe.winpipe_fromBuffer
 lua_win_pipe.toBuffer = winpipe.winpipe_toBuffer
 lua_win_pipe.newPDWORD = winpipe.winpipe_newPDWORD
 lua_win_pipe.getPDWORD = winpipe.winpipe_getPDWORD
