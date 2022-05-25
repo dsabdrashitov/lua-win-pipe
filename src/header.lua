@@ -29,6 +29,10 @@ PIPE_REJECT_REMOTE_CLIENTS = PIPE_REJECT_REMOTE_CLIENTS
 PIPE_UNLIMITED_INSTANCES = PIPE_UNLIMITED_INSTANCES
 -- INVALID_HANDLE_VALUE
 INVALID_HANDLE_VALUE = INVALID_HANDLE_VALUE
+-- NULL
+NULL = NULL
+-- SIZEOF_DWORD
+SIZEOF_DWORD = SIZEOF_DWORD
 -- CreateFile:dwDesiredAccess, mask
 GENERIC_READ = GENERIC_READ
 GENERIC_WRITE = GENERIC_WRITE
@@ -104,6 +108,21 @@ ERROR_PIPE_LISTENING = ERROR_PIPE_LISTENING
 
 -- returns logical or of masks in arguments
 function mask(mask1, ...) return 0 end
+
+-- creates new block of bytes in C and returns it as userdata
+function ByteBlock_alloc(intSizeInBytes) return userdata() end
+
+-- returns intCount bytes starting from offset in block of bytes as lua string
+function ByteBlock_getString(udBlock, intOffset, intCount) return "" end
+
+-- returns contents of byte block as it was DWORD (size of block shoud equals size of DWORD)
+function ByteBlock_getDWORD(udBlock) return 0 end
+
+-- copies bytes of lua string strData to C char* starting from offset intOffset
+function ByteBlock_setString(udBlock, intOffset, strData) return nil end
+
+-- set contents of byte block to value of intValue
+function ByteBlock_setDWORD(udBlock, intValue) return nil end
 
 -- creates new char* array in C and returns it as userdata
 function newBuffer(intSizeInBytes) return userdata() end
