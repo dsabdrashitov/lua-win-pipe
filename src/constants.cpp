@@ -7,7 +7,7 @@
 
 static void addLongConstant(lua_State* L, const char* name, unsigned long value) {
     lua_pushstring(L, name);
-    lua_pushnumber(L, value);
+    lua_pushinteger(L, value);
     lua_settable(L, -3);
 }
 

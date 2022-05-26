@@ -17,6 +17,6 @@ int lib_mask(lua_State* L) {
         result |= arg;
     }
     
-    lua_pushnumber(L, result);
+    lua_pushinteger(L, result);
     return 1;
 }
