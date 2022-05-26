@@ -47,9 +47,9 @@ function main()
 
     local readBuffer = lwp.newBuffer(READ_BUFFER_SIZE)
     local writeBuffer = lwp.newBuffer(WRITE_BUFFER_SIZE)
-    local pdwBytesDone = lwp.newPDWORD(0)
-    local pdwTotalBytesAvail = lwp.newPDWORD(0)
-    local pdwBytesLeftThisMessage = lwp.newPDWORD(0)
+    local pdwBytesDone = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
+    local pdwTotalBytesAvail = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
+    local pdwBytesLeftThisMessage = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
 
     local lastprint = nil
     while true do
@@ -57,9 +57,9 @@ function main()
         while (true) do
             ret = lwp.PeekNamedPipe(hPipe, nil, 0, pdwBytesDone, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
             local toprint = "peek: " ..
-                    tostring(lwp.getPDWORD(pdwBytesDone)) .. " " ..
-                    tostring(lwp.getPDWORD(pdwTotalBytesAvail)) .. " " ..
-                    tostring(lwp.getPDWORD(pdwBytesLeftThisMessage))
+                    tostring(lwp.ByteBlock_getDWORD(pdwBytesDone)) .. " " ..
+                    tostring(lwp.ByteBlock_getDWORD(pdwTotalBytesAvail)) .. " " ..
+                    tostring(lwp.ByteBlock_getDWORD(pdwBytesLeftThisMessage))
             if toprint ~= lastprint then
                 print(toprint)
                 lastprint = toprint
@@ -68,16 +68,16 @@ function main()
                 print("Error: peek failed (" .. tostring(lwp.GetLastError()) .. ")")
                 goto end_main_loop
             end
-            if lwp.getPDWORD(pdwTotalBytesAvail) == 0 then
+            if lwp.ByteBlock_getDWORD(pdwTotalBytesAvail) == 0 then
                 goto end_read_loop
             end
             ret = lwp.ReadFile(hPipe, readBuffer, READ_BUFFER_SIZE, pdwBytesDone, nil)
-            print("read: " .. tostring(lwp.getPDWORD(pdwBytesDone)))
+            print("read: " .. tostring(lwp.ByteBlock_getDWORD(pdwBytesDone)))
             if not ret then
                 print("Error: read failed (" .. tostring(lwp.GetLastError()) .. ")")
                 goto end_main_loop
             end
-            local readPart = lwp.fromBuffer(readBuffer, lwp.getPDWORD(pdwBytesDone))
+            local readPart = lwp.fromBuffer(readBuffer, lwp.ByteBlock_getDWORD(pdwBytesDone))
             readParts[#readParts + 1] = readPart
         end
         ::end_read_loop::
@@ -92,7 +92,7 @@ function main()
             local cnt = math.min(replyMessage:len() - i + 1, WRITE_BUFFER_SIZE)
             lwp.toBuffer(writeBuffer, replyMessage:sub(i, i + cnt - 1))
             ret = lwp.WriteFile(hPipe, writeBuffer, cnt, pdwBytesDone, nil)
-            print("write: " .. tostring(lwp.getPDWORD(pdwBytesDone)))
+            print("write: " .. tostring(lwp.ByteBlock_getDWORD(pdwBytesDone)))
             if not ret then
                 print("Error: write failed (" .. tostring(lwp.GetLastError()) .. ")")
                 goto end_main_loop

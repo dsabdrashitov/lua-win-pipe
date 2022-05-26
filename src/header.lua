@@ -29,6 +29,7 @@ PIPE_REJECT_REMOTE_CLIENTS = PIPE_REJECT_REMOTE_CLIENTS
 PIPE_UNLIMITED_INSTANCES = PIPE_UNLIMITED_INSTANCES
 -- INVALID_HANDLE_VALUE
 INVALID_HANDLE_VALUE = INVALID_HANDLE_VALUE
+--TODO: not shure if pointer to pointer to NULL is needed
 -- NULL
 NULL = NULL
 -- SIZEOF_DWORD
@@ -132,12 +133,6 @@ function fromBuffer(udBuffer, intCount) return "" end
 
 -- copies lua string strData to C char* udBuffer
 function toBuffer(udBuffer, strData) return nil end
-
--- allocates new DWORD in C, fills it with intValue and returns pointer to it as userdata
-function newPDWORD(intValue) return userdata() end
-
--- returns value of DWORD at location where userdata udPDWORD points
-function getPDWORD(udPDWORD) return 0 end
 
 
 -- wrapped functions from <windows.h>

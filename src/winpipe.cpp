@@ -4,7 +4,6 @@
 #include "byteblock.h"
 #include "bytebuffer.h"
 #include "constants.h"
-#include "pdword.h"
 #include "phandle.h"
 #include "utils.h"
 #include "functions\closehandle.h"
@@ -44,8 +43,6 @@ static const struct luaL_Reg library_functions[] = {
     {"winpipe_fromBuffer", lib_fromBuffer},
     {"winpipe_newBuffer", lib_newBuffer},
     {"winpipe_toBuffer", lib_toBuffer},
-    {"winpipe_newPDWORD", lib_newPDWORD},
-    {"winpipe_getPDWORD", lib_getPDWORD},
     {NULL, NULL}
 };
 
@@ -53,7 +50,6 @@ extern "C" LUALIB_API int luaopen_winpipe(lua_State* L) {
     winpipe::byteblock::registerMeta(L);
     registerMetaPHandle(L);
     registerMetaBuffer(L);
-    registerMetaPDWORD(L);
     luaL_newlib(L, library_functions);
     return 1;
 }
