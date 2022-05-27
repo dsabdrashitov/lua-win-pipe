@@ -36,6 +36,7 @@ static const struct luaL_Reg library_functions[] = {
     {"winpipe_constants", lib_constants},
     {"winpipe_mask", lib_mask},
     {"winpipe_ByteBlock_alloc", winpipe::byteblock::lib_alloc},
+    {"winpipe_ByteBlock_setOffset", winpipe::byteblock::lib_setOffset},
     {"winpipe_ByteBlock_getString", winpipe::byteblock::lib_getString},
     {"winpipe_ByteBlock_getDWORD", winpipe::byteblock::lib_getDWORD},
     {"winpipe_ByteBlock_setString", winpipe::byteblock::lib_setString},

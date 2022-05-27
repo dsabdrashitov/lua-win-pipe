@@ -16,10 +16,16 @@ function main()
 
     local strConst = "Hello, World!!!"
     local udStr = lwp.ByteBlock_alloc(strConst:len())
-    lwp.ByteBlock_setString(udStr, 0, strConst)
-    print(lwp.ByteBlock_getString(udStr, 1, 14))
-    lwp.ByteBlock_setString(udStr, 3, "zxy111")
-    print(lwp.ByteBlock_getString(udStr, 0, strConst:len()))
+    lwp.ByteBlock_setString(udStr, strConst)
+
+    lwp.ByteBlock_setOffset(udStr, 1)
+    print(lwp.ByteBlock_getString(udStr, 14))
+
+    lwp.ByteBlock_setOffset(udStr, 3);
+    lwp.ByteBlock_setString(udStr, "zxy111")
+
+    lwp.ByteBlock_setOffset(udStr, 0);
+    print(lwp.ByteBlock_getString(udStr, strConst:len()))
 end
 
 main()

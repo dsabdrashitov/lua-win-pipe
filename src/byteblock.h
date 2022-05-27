@@ -7,17 +7,18 @@
 namespace winpipe::byteblock {
 
 typedef struct {
-    int size;
+    long size;
     char* ptr;
 } ByteBlock;
 
 void registerMeta(lua_State* L);
-void createByteBlock(lua_State* L, int size);
+void createByteBlock(lua_State* L, long size);
 ByteBlock getByteBlock(lua_State* L, int index);
 HANDLE* getPHandle(lua_State* L, int index);
 DWORD* getPDWORD(lua_State* L, int index);
 
 int lib_alloc(lua_State* L);
+int lib_setOffset(lua_State* L);
 int lib_getString(lua_State* L);
 int lib_getDWORD(lua_State* L);
 int lib_setString(lua_State* L);

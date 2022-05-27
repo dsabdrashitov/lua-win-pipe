@@ -29,9 +29,6 @@ PIPE_REJECT_REMOTE_CLIENTS = PIPE_REJECT_REMOTE_CLIENTS
 PIPE_UNLIMITED_INSTANCES = PIPE_UNLIMITED_INSTANCES
 -- INVALID_HANDLE_VALUE
 INVALID_HANDLE_VALUE = INVALID_HANDLE_VALUE
---TODO: not shure if pointer to pointer to NULL is needed
--- NULL
-NULL = NULL
 -- SIZEOF_DWORD
 SIZEOF_DWORD = SIZEOF_DWORD
 -- CreateFile:dwDesiredAccess, mask
@@ -113,17 +110,20 @@ function mask(mask1, ...) return 0 end
 -- creates new block of bytes in C and returns it as userdata
 function ByteBlock_alloc(intSizeInBytes) return userdata() end
 
--- returns intCount bytes starting from offset in block of bytes as lua string
-function ByteBlock_getString(udBlock, intOffset, intCount) return "" end
+-- changes viewpoint of byteblock ot intOffset from the start of block
+function ByteBlock_setOffset(udBlock, intOffset) end
+
+-- returns intCount bytes in block of bytes as lua string
+function ByteBlock_getString(udBlock, intCount) return "" end
 
 -- returns contents of byte block as it was DWORD (size of block shoud equals size of DWORD)
 function ByteBlock_getDWORD(udBlock) return 0 end
 
--- copies bytes of lua string strData to C char* starting from offset intOffset
-function ByteBlock_setString(udBlock, intOffset, strData) return nil end
+-- copies bytes of lua string strData to C char*
+function ByteBlock_setString(udBlock, strData) end
 
 -- set contents of byte block to value of intValue
-function ByteBlock_setDWORD(udBlock, intValue) return nil end
+function ByteBlock_setDWORD(udBlock, intValue) end
 
 -- creates new char* array in C and returns it as userdata
 function newBuffer(intSizeInBytes) return userdata() end

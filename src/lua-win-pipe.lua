@@ -17,6 +17,7 @@ end
 
 lua_win_pipe.mask = winpipe.winpipe_mask
 lua_win_pipe.ByteBlock_alloc = winpipe.winpipe_ByteBlock_alloc
+lua_win_pipe.ByteBlock_setOffset = winpipe.winpipe_ByteBlock_setOffset
 lua_win_pipe.ByteBlock_getString = winpipe.winpipe_ByteBlock_getString
 lua_win_pipe.ByteBlock_getDWORD = winpipe.winpipe_ByteBlock_getDWORD
 lua_win_pipe.ByteBlock_setString = winpipe.winpipe_ByteBlock_setString
