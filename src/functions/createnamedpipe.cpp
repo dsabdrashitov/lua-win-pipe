@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "..\byteblock.h"
 
+namespace winpipe::functions {
 
 int lib_CreateNamedPipe(lua_State* L) {   
     const char* pName = luaL_checkstring(L, 1);
@@ -28,4 +29,6 @@ int lib_CreateNamedPipe(lua_State* L) {
          NULL);
 
     return 1;
+}
+
 }

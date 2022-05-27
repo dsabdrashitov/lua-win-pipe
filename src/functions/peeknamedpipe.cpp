@@ -4,6 +4,7 @@
 #include "..\byteblock.h"
 #include "..\bytebuffer.h"
 
+namespace winpipe::functions {
 
 int lib_PeekNamedPipe(lua_State* L) {
     HANDLE handle = *(winpipe::byteblock::getPHandle(L, 1));
@@ -17,4 +18,6 @@ int lib_PeekNamedPipe(lua_State* L) {
 
     lua_pushboolean(L, result);
     return 1;
+}
+
 }

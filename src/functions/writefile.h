@@ -3,6 +3,10 @@
 
 #include "..\common.h"
 
+namespace winpipe::functions {
+
 int lib_WriteFile(lua_State* L);
+
+}
 
 #endif

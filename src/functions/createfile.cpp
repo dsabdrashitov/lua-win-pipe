@@ -3,6 +3,8 @@
 #include <windows.h>
 #include "..\byteblock.h"
 
+namespace winpipe::functions {
+
 int lib_CreateFile(lua_State* L) {
     const char* pName = luaL_checkstring(L, 1);
     DWORD dwDesiredAccess = luaL_checkinteger(L, 2);
@@ -25,4 +27,6 @@ int lib_CreateFile(lua_State* L) {
         NULL);
 
     return 1;
+}
+
 }

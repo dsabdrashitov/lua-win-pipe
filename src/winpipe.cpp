@@ -22,15 +22,15 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  fdwReason, LPVOID lpReserved) {
 }
 
 static const struct luaL_Reg library_functions[] = {
-    {"winpipe_ConnectNamedPipe", lib_ConnectNamedPipe},
-    {"winpipe_CloseHandle", lib_CloseHandle},
-    {"winpipe_CreateFile", lib_CreateFile},
-    {"winpipe_CreateNamedPipe", lib_CreateNamedPipe},
-    {"winpipe_GetLastError", lib_GetLastError},
-    {"winpipe_PeekNamedPipe", lib_PeekNamedPipe},
-    {"winpipe_ReadFile", lib_ReadFile},
-    {"winpipe_WaitNamedPipe", lib_WaitNamedPipe},
-    {"winpipe_WriteFile", lib_WriteFile},
+    {"winpipe_ConnectNamedPipe", winpipe::functions::lib_ConnectNamedPipe},
+    {"winpipe_CloseHandle", winpipe::functions::lib_CloseHandle},
+    {"winpipe_CreateFile", winpipe::functions::lib_CreateFile},
+    {"winpipe_CreateNamedPipe", winpipe::functions::lib_CreateNamedPipe},
+    {"winpipe_GetLastError", winpipe::functions::lib_GetLastError},
+    {"winpipe_PeekNamedPipe", winpipe::functions::lib_PeekNamedPipe},
+    {"winpipe_ReadFile", winpipe::functions::lib_ReadFile},
+    {"winpipe_WaitNamedPipe", winpipe::functions::lib_WaitNamedPipe},
+    {"winpipe_WriteFile", winpipe::functions::lib_WriteFile},
     
     {"winpipe_constants", lib_constants},
     {"winpipe_mask", lib_mask},

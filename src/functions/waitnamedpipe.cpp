@@ -2,6 +2,8 @@
 
 #include <windows.h>
 
+namespace winpipe::functions {
+
 int lib_WaitNamedPipe(lua_State* L) {
     const char* pName = luaL_checkstring(L, 1);
     DWORD nTimeOut = luaL_checkinteger(L, 2);
@@ -10,4 +12,6 @@ int lib_WaitNamedPipe(lua_State* L) {
 
     lua_pushboolean(L, result);
     return 1;
+}
+
 }
