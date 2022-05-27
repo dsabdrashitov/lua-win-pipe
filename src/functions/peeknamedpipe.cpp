@@ -2,12 +2,11 @@
 
 #include <windows.h>
 #include "..\byteblock.h"
-#include "..\phandle.h"
 #include "..\bytebuffer.h"
 
 
 int lib_PeekNamedPipe(lua_State* L) {
-    HANDLE handle = *(getHandlePointer(L, 1));
+    HANDLE handle = *(winpipe::byteblock::getPHandle(L, 1));
     char* lpBuffer = lua_isnil(L, 2) ? NULL : getBuffer(L, 2);
     DWORD nBufferSize = luaL_checkinteger(L, 3);
     DWORD* lpBytesRead = lua_isnil(L, 4) ? NULL : winpipe::byteblock::getPDWORD(L, 4);

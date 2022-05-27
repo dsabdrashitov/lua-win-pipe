@@ -136,10 +136,10 @@ function toBuffer(udBuffer, strData) return nil end
 
 
 -- wrapped functions from <windows.h>
-function CloseHandle(udHandle)
+function CloseHandle(pHandle)
     return false
 end
-function ConnectNamedPipe(udHandle, nilOverlapped)
+function ConnectNamedPipe(pHandle, nilOverlapped)
     return false
 end
 function CreateFile(strName, intDesiredAccess, intShareMode, nilSecurityAttributes,
@@ -153,15 +153,15 @@ end
 function GetLastError()
     return 0
 end
-function PeekNamedPipe(udHandle, udBuffer, intBufferSize, pdwBytesRead, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
+function PeekNamedPipe(pHandle, udBuffer, intBufferSize, pdwBytesRead, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
     return false
 end
-function ReadFile(udHandle, udBuffer, intBufferSize, pdwBytesRead, nilOverlapped)
+function ReadFile(pHandle, udBuffer, intBufferSize, pdwBytesRead, nilOverlapped)
     return false
 end
 function WaitNamedPipe(strName, intTimeOut)
     return false
 end
-function WriteFile(udHandle, udBuffer, intBytesToWrite, pdwBytesWritten, nilOverlapped)
+function WriteFile(pHandle, udBuffer, intBytesToWrite, pdwBytesWritten, nilOverlapped)
     return false
 end

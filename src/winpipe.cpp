@@ -4,7 +4,6 @@
 #include "byteblock.h"
 #include "bytebuffer.h"
 #include "constants.h"
-#include "phandle.h"
 #include "utils.h"
 #include "functions\closehandle.h"
 #include "functions\connectnamedpipe.h"
@@ -49,7 +48,6 @@ static const struct luaL_Reg library_functions[] = {
 
 extern "C" LUALIB_API int luaopen_winpipe(lua_State* L) {
     winpipe::byteblock::registerMeta(L);
-    registerMetaPHandle(L);
     registerMetaBuffer(L);
     luaL_newlib(L, library_functions);
     return 1;
