@@ -45,8 +45,8 @@ function main()
         print("Connected.")
     end
 
-    local readBuffer = lwp.newBuffer(READ_BUFFER_SIZE)
-    local writeBuffer = lwp.newBuffer(WRITE_BUFFER_SIZE)
+    local readBuffer = lwp.ByteBlock_alloc(READ_BUFFER_SIZE)
+    local writeBuffer = lwp.ByteBlock_alloc(WRITE_BUFFER_SIZE)
     local pdwBytesDone = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
     local pdwTotalBytesAvail = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
     local pdwBytesLeftThisMessage = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
@@ -77,7 +77,7 @@ function main()
                 print("Error: read failed (" .. tostring(lwp.GetLastError()) .. ")")
                 goto end_main_loop
             end
-            local readPart = lwp.fromBuffer(readBuffer, lwp.ByteBlock_getDWORD(pdwBytesDone))
+            local readPart = lwp.ByteBlock_getString(readBuffer, lwp.ByteBlock_getDWORD(pdwBytesDone))
             readParts[#readParts + 1] = readPart
         end
         ::end_read_loop::
@@ -90,7 +90,7 @@ function main()
         local replyMessage = "this is reply to '" .. readMessage .. "'"
         for i = 1, replyMessage:len(), WRITE_BUFFER_SIZE do
             local cnt = math.min(replyMessage:len() - i + 1, WRITE_BUFFER_SIZE)
-            lwp.toBuffer(writeBuffer, replyMessage:sub(i, i + cnt - 1))
+            lwp.ByteBlock_setString(writeBuffer, replyMessage:sub(i, i + cnt - 1))
             ret = lwp.WriteFile(hPipe, writeBuffer, cnt, pdwBytesDone, nil)
             print("write: " .. tostring(lwp.ByteBlock_getDWORD(pdwBytesDone)))
             if not ret then

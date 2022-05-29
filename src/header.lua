@@ -125,15 +125,6 @@ function ByteBlock_setString(udBlock, strData) end
 -- set contents of byte block to value of intValue
 function ByteBlock_setDWORD(udBlock, intValue) end
 
--- creates new char* array in C and returns it as userdata
-function newBuffer(intSizeInBytes) return userdata() end
-
--- returns first intCount bytes of udBuffer as lua string
-function fromBuffer(udBuffer, intCount) return "" end
-
--- copies lua string strData to C char* udBuffer
-function toBuffer(udBuffer, strData) return nil end
-
 
 -- wrapped functions from <windows.h>
 function CloseHandle(pHandle)
