@@ -36,9 +36,9 @@ function main()
         print("Created.")
     end
 
-    local pdwBytesDone = lwp.newPDWORD(0)
-    local pdwTotalBytesAvail = lwp.newPDWORD(0)
-    local pdwBytesLeftThisMessage = lwp.newPDWORD(0)
+    local pdwBytesDone = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
+    local pdwTotalBytesAvail = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
+    local pdwBytesLeftThisMessage = lwp.ByteBlock_alloc(lwp.SIZEOF_DWORD)
 
     while true do
         local strIn = io.read("*line")
@@ -46,11 +46,11 @@ function main()
             print("Can't send empty message")
             goto continue_main_loop
         end
-        local writeBuffer = lwp.newBuffer(strIn:len())
-        lwp.toBuffer(writeBuffer, strIn)
+        local writeBuffer = lwp.ByteBlock_alloc(strIn:len())
+        lwp.ByteBlock_setString(writeBuffer, strIn)
         ret = lwp.WriteFile(hPipe, writeBuffer, strIn:len(), pdwBytesDone, nil)
-        print("write: " .. tostring(lwp.getPDWORD(pdwBytesDone)))
-        if (not ret) or (lwp.getPDWORD(pdwBytesDone) ~= strIn:len()) then
+        print("write: " .. tostring(lwp.ByteBlock_getDWORD(pdwBytesDone)))
+        if (not ret) or (lwp.ByteBlock_getDWORD(pdwBytesDone) ~= strIn:len()) then
             print("Error: write failed (" .. tostring(lwp.GetLastError()) .. ")")
             goto end_main_loop
         end
@@ -60,9 +60,9 @@ function main()
         while true do
             ret = lwp.PeekNamedPipe(hPipe, nil, 0, pdwBytesDone, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
             local toprint = "peek: " ..
-                    tostring(lwp.getPDWORD(pdwBytesDone)) .. " " ..
-                    tostring(lwp.getPDWORD(pdwTotalBytesAvail)) .. " " ..
-                    tostring(lwp.getPDWORD(pdwBytesLeftThisMessage))
+                    tostring(lwp.ByteBlock_getDWORD(pdwBytesDone)) .. " " ..
+                    tostring(lwp.ByteBlock_getDWORD(pdwTotalBytesAvail)) .. " " ..
+                    tostring(lwp.ByteBlock_getDWORD(pdwBytesLeftThisMessage))
             if toprint ~= lastprint then
                 print(toprint)
                 lastprint = toprint
@@ -71,7 +71,7 @@ function main()
                 print("Error: peek failed (" .. tostring(lwp.GetLastError()) .. ")")
                 goto end_main_loop
             end
-            local len = lwp.getPDWORD(pdwTotalBytesAvail)
+            local len = lwp.ByteBlock_getDWORD(pdwTotalBytesAvail)
             if len ~= 0 then
                 goto end_wait_loop
             end
@@ -82,25 +82,25 @@ function main()
         while true do
             ret = lwp.PeekNamedPipe(hPipe, nil, 0, pdwBytesDone, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
             print("peek: " ..
-                    tostring(lwp.getPDWORD(pdwBytesDone)) .. " " ..
-                    tostring(lwp.getPDWORD(pdwTotalBytesAvail)) .. " " ..
-                    tostring(lwp.getPDWORD(pdwBytesLeftThisMessage)))
+                    tostring(lwp.ByteBlock_getDWORD(pdwBytesDone)) .. " " ..
+                    tostring(lwp.ByteBlock_getDWORD(pdwTotalBytesAvail)) .. " " ..
+                    tostring(lwp.ByteBlock_getDWORD(pdwBytesLeftThisMessage)))
             if not ret then
                 print("Error: peek failed (" .. tostring(lwp.GetLastError()) .. ")")
                 goto end_main_loop
             end
-            local len = lwp.getPDWORD(pdwTotalBytesAvail)
+            local len = lwp.ByteBlock_getDWORD(pdwTotalBytesAvail)
             if len == 0 then
                 goto end_read_loop
             end
-            local buf = lwp.newBuffer(len)
+            local buf = lwp.ByteBlock_alloc(len)
             ret = lwp.ReadFile(hPipe, buf, len, pdwBytesDone, nil)
-            print("read: " .. tostring(lwp.getPDWORD(pdwBytesDone)))
+            print("read: " .. tostring(lwp.ByteBlock_getDWORD(pdwBytesDone)))
             if not ret then
                 print("Error: read failed (" .. tostring(lwp.GetLastError()) .. ")")
                 goto end_main_loop
             end
-            local readPart = lwp.fromBuffer(buf, lwp.getPDWORD(pdwBytesDone))
+            local readPart = lwp.ByteBlock_getString(buf, lwp.ByteBlock_getDWORD(pdwBytesDone))
             readParts[#readParts + 1] = readPart
         end
         ::end_read_loop::

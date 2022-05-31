@@ -3,6 +3,10 @@
 
 #include "..\common.h"
 
+namespace winpipe::functions {
+
 int lib_CloseHandle(lua_State* L);
+
+}
 
 #endif

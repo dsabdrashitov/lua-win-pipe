@@ -16,6 +16,12 @@ for name, val in pairs(winpipe.winpipe_constants()) do
 end
 
 lua_win_pipe.mask = winpipe.winpipe_mask
+lua_win_pipe.ByteBlock_alloc = winpipe.winpipe_ByteBlock_alloc
+lua_win_pipe.ByteBlock_setOffset = winpipe.winpipe_ByteBlock_setOffset
+lua_win_pipe.ByteBlock_getString = winpipe.winpipe_ByteBlock_getString
+lua_win_pipe.ByteBlock_getDWORD = winpipe.winpipe_ByteBlock_getDWORD
+lua_win_pipe.ByteBlock_setString = winpipe.winpipe_ByteBlock_setString
+lua_win_pipe.ByteBlock_setDWORD = winpipe.winpipe_ByteBlock_setDWORD
 lua_win_pipe.newBuffer = winpipe.winpipe_newBuffer
 lua_win_pipe.fromBuffer = winpipe.winpipe_fromBuffer
 lua_win_pipe.toBuffer = winpipe.winpipe_toBuffer

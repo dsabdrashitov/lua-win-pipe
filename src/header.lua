@@ -29,6 +29,8 @@ PIPE_REJECT_REMOTE_CLIENTS = PIPE_REJECT_REMOTE_CLIENTS
 PIPE_UNLIMITED_INSTANCES = PIPE_UNLIMITED_INSTANCES
 -- INVALID_HANDLE_VALUE
 INVALID_HANDLE_VALUE = INVALID_HANDLE_VALUE
+-- SIZEOF_DWORD
+SIZEOF_DWORD = SIZEOF_DWORD
 -- CreateFile:dwDesiredAccess, mask
 GENERIC_READ = GENERIC_READ
 GENERIC_WRITE = GENERIC_WRITE
@@ -105,27 +107,30 @@ ERROR_PIPE_LISTENING = ERROR_PIPE_LISTENING
 -- returns logical or of masks in arguments
 function mask(mask1, ...) return 0 end
 
--- creates new char* array in C and returns it as userdata
-function newBuffer(intSizeInBytes) return userdata() end
+-- creates new block of bytes in C and returns it as userdata
+function ByteBlock_alloc(intSizeInBytes) return userdata() end
 
--- returns first intCount bytes of udBuffer as lua string
-function fromBuffer(udBuffer, intCount) return "" end
+-- changes viewpoint of byteblock ot intOffset from the start of block
+function ByteBlock_setOffset(udBlock, intOffset) end
 
--- copies lua string strData to C char* udBuffer
-function toBuffer(udBuffer, strData) return nil end
+-- returns intCount bytes in block of bytes as lua string
+function ByteBlock_getString(udBlock, intCount) return "" end
 
--- allocates new DWORD in C, fills it with intValue and returns pointer to it as userdata
-function newPDWORD(intValue) return userdata() end
+-- returns contents of byte block as it was DWORD (size of block shoud equals size of DWORD)
+function ByteBlock_getDWORD(udBlock) return 0 end
 
--- returns value of DWORD at location where userdata udPDWORD points
-function getPDWORD(udPDWORD) return 0 end
+-- copies bytes of lua string strData to C char*
+function ByteBlock_setString(udBlock, strData) end
+
+-- set contents of byte block to value of intValue
+function ByteBlock_setDWORD(udBlock, intValue) end
 
 
 -- wrapped functions from <windows.h>
-function CloseHandle(udHandle)
+function CloseHandle(pHandle)
     return false
 end
-function ConnectNamedPipe(udHandle, nilOverlapped)
+function ConnectNamedPipe(pHandle, nilOverlapped)
     return false
 end
 function CreateFile(strName, intDesiredAccess, intShareMode, nilSecurityAttributes,
@@ -139,15 +144,15 @@ end
 function GetLastError()
     return 0
 end
-function PeekNamedPipe(udHandle, udBuffer, intBufferSize, pdwBytesRead, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
+function PeekNamedPipe(pHandle, udBuffer, intBufferSize, pdwBytesRead, pdwTotalBytesAvail, pdwBytesLeftThisMessage)
     return false
 end
-function ReadFile(udHandle, udBuffer, intBufferSize, pdwBytesRead, nilOverlapped)
+function ReadFile(pHandle, udBuffer, intBufferSize, pdwBytesRead, nilOverlapped)
     return false
 end
 function WaitNamedPipe(strName, intTimeOut)
     return false
 end
-function WriteFile(udHandle, udBuffer, intBytesToWrite, pdwBytesWritten, nilOverlapped)
+function WriteFile(pHandle, udBuffer, intBytesToWrite, pdwBytesWritten, nilOverlapped)
     return false
 end

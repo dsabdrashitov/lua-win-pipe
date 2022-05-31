@@ -3,7 +3,6 @@
 
 #include "common.h"
 
-int meta_pointerEquals(lua_State* L);
 int lib_mask(lua_State* L);
 
 #endif

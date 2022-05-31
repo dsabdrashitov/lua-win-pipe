@@ -1,18 +1,20 @@
 #include "constants.h"
 
 #include <windows.h>
-#include "phandle.h"
+#include "byteblock.h"
 
 
 static void addLongConstant(lua_State* L, const char* name, unsigned long value) {
     lua_pushstring(L, name);
-    lua_pushnumber(L, value);
+    lua_pushinteger(L, value);
     lua_settable(L, -3);
 }
 
 static void addHandleConstant(lua_State* L, const char* name, HANDLE value) {
     lua_pushstring(L, name);
-    pushHandle(L, value);
+    winpipe::byteblock::createByteBlock(L, sizeof(HANDLE));
+    HANDLE* pHandle = winpipe::byteblock::getPHandle(L, -1);
+    *pHandle = value;
     lua_settable(L, -3);
 }
 
@@ -45,6 +47,9 @@ int lib_constants(lua_State* L) {
 
     // INVALID_HANDLE_VALUE
     addHandleConstant(L, "INVALID_HANDLE_VALUE", INVALID_HANDLE_VALUE);
+    
+    // sizeof(DWORD)
+    addLongConstant(L, "SIZEOF_DWORD", sizeof(DWORD));
 
     // CreateFile:dwDesiredAccess, mask
     addLongConstant(L, "GENERIC_READ", GENERIC_READ);
