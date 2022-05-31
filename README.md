@@ -16,8 +16,8 @@ Implemented functions:
 Example of using the wrappers is given in files
 [sample-client.lua][sample-client] and [sample-server.lua][sample-server].
 
-Release v.1.0 binaries built with _mingw-w64_ for Lua 5.3: [zip][binary]
+Release v.1.1 binaries built with _mingw-w64_ for Lua 5.3: [zip][binary]
 
 [sample-client]: sample-client.lua
 [sample-server]: sample-server.lua
-[binary]:https://github.com/dsabdrashitov/lua-win-pipe/releases/download/v.1.0/lua-win-pipe.zip
+[binary]:https://github.com/dsabdrashitov/lua-win-pipe/releases/download/v.1.1/lua-win-pipe-v_1_1.zip
