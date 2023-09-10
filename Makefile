@@ -2,7 +2,7 @@ OUTPUT_NAME := lua-win-pipe
 DLL_NAME := winpipe
 
 CC := g++
-LIBS := lua53
+LIBS := lua54
 
 BUILD_DIR := ./build
 SRC_PREFIX := ./src
