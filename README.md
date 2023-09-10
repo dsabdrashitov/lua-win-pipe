@@ -17,6 +17,7 @@ Example of using the wrappers is given in files
 [sample-client.lua][sample-client] and [sample-server.lua][sample-server].
 
 Release v.1.1 binaries built with _mingw-w64_ for Lua 5.3: [zip][binary-lua53]
+
 Release v.1.1 binaries built with _mingw-w64_ for Lua 5.4: [zip][binary-lua54]
 
 [sample-client]: sample-client.lua
