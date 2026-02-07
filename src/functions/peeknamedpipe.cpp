@@ -17,7 +17,8 @@ int lib_PeekNamedPipe(lua_State* L) {
     DWORD* lpBytesLeftThisMessage = lua_isnil(L, 6) ? NULL : winpipe::byteblock::getPDWORD(L, 6);
     
     BOOL result = PeekNamedPipe(handle, udBuffer.ptr, nBufferSize, lpBytesRead, lpTotalBytesAvail, lpBytesLeftThisMessage);
-
+    winpipe::g_LastStoredError = GetLastError();
+    
     lua_pushboolean(L, result);
     return 1;
 }

@@ -25,6 +25,7 @@ int lib_CreateFile(lua_State* L) {
         dwCreateDisposition,
         dwFlagsAndAttributes,
         NULL);
+    winpipe::g_LastStoredError = GetLastError();
 
     return 1;
 }

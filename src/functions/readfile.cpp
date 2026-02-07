@@ -16,6 +16,7 @@ int lib_ReadFile(lua_State* L) {
     luaL_argcheck(L, lua_isnil(L, 5), 5, "nil expected");
     
     BOOL result = ReadFile(handle, udBuffer.ptr, nBufferSize, lpBytesRead, NULL);
+    winpipe::g_LastStoredError = GetLastError();
 
     lua_pushboolean(L, result);
     return 1;

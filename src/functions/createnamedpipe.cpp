@@ -27,6 +27,7 @@ int lib_CreateNamedPipe(lua_State* L) {
          nInBufferSize,
          nTimeoutMs,
          NULL);
+    winpipe::g_LastStoredError = GetLastError();
 
     return 1;
 }

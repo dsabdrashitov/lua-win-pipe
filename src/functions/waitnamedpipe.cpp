@@ -9,6 +9,7 @@ int lib_WaitNamedPipe(lua_State* L) {
     DWORD nTimeOut = luaL_checkinteger(L, 2);
 
     BOOL result = WaitNamedPipe(pName, nTimeOut);
+    winpipe::g_LastStoredError = GetLastError();
 
     lua_pushboolean(L, result);
     return 1;

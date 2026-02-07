@@ -10,6 +10,7 @@ int lib_ConnectNamedPipe(lua_State* L) {
     luaL_argcheck(L, lua_isnil(L, 2), 2, "nil expected");
 
     BOOL result = ConnectNamedPipe(handle, NULL);
+    winpipe::g_LastStoredError = GetLastError();
 
     lua_pushboolean(L, result);
     return 1;

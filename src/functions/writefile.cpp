@@ -16,6 +16,7 @@ int lib_WriteFile(lua_State* L) {
     luaL_argcheck(L, lua_isnil(L, 5), 5, "nil expected");
     
     BOOL result = WriteFile(handle, udBuffer.ptr, nNumberOfBytesToWrite, lpBytesWritten, NULL);
+    winpipe::g_LastStoredError = GetLastError();
 
     lua_pushboolean(L, result);
     return 1;

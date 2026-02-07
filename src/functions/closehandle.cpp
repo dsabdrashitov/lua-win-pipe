@@ -9,6 +9,7 @@ int lib_CloseHandle(lua_State* L) {
     HANDLE handle = *winpipe::byteblock::getPHandle(L, 1);
 
     WINBOOL result = CloseHandle(handle);
+    winpipe::g_LastStoredError = GetLastError();
     
     lua_pushboolean(L, result);
     return 1;
